@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="Media/Favcons/terminal-de-codigo-favcon.png" type="image/x-icon">
+    <link rel="stylesheet" href="estilos.css">
+    <script src="codigo.js"></script>
+    <title>Lista de tarefas</title>
+</head>
+
+<body>
+    <!--Cabeçalho-->
+    <div class="pag-cabecalho">
+        <div class="pag-cabecalho-interno">
+            <div class="cabecalho-icone">
+                <!-- Ícone de checklist - desenhado direto no html com coordenadas -->
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <rect x="3" y="3" width="18" height="18" rx="3" />
+                    <path d="M9 9l2 2 4-4" />
+                    <line x1="9" y1="14" x2="15" y2="14" />
+                </svg>
+            </div>
+            <h1>Gerenciador de Tarefas</h1>
+        </div>
+        <p>Organize suas atividades e aumente sua produtividade</p>
+    </div>
+
+
+    <div class="container">
+
+        <!-- ===== BARRA DE FERRAMENTAS ===== -->
+        <div class="barra_ferramentas">
+            <button class="btn-ferram" id="btn-notif" onclick="ativarNotificacoes()">
+                🔔 <span>Notificações</span>
+            </button>
+            <button class="btn-ferram" onclick="exportarPDF()">
+                📄 <span>Exportar em PDF</span>
+            </button>
+        </div>
+
+        <!-- ===== FORMULÁRIO - NOVA TAREFA ===== -->
+        <div class="formulario">
+            <div class="form-titulo">Nova Tarefa</div>
+
+            <div class="campo">
+                <label>Título <span class="req">*</span></label>
+                <input type="text" id="campo-titulo" placeholder="Digite o título da tarefa">
+                <div class="erro-msg" id="erro-titulo">Por favor, preencha o título.</div>
+            </div>
+
+            <div class="campo">
+                <label>Descrição</label>
+                <textarea id="campo-desc" placeholder="Digite uma descrição (opcional)"></textarea>
+            </div>
+
+            <div class="campos-duplos">
+                <div class="campo" style="margin-bottom:0">
+                    <label>Data de Entrega</label>
+                    <input type="date" id="campo-data">
+                </div>
+                <div class="campo" style="margin-bottom:0">
+                    <label>Prioridade</label>
+                    <select id="campo-prioridade">
+                        <option value="baixa">Baixa</option>
+                        <option value="media" selected>Média</option>
+                        <option value="alta">Alta</option>
+                    </select>
+                </div>
+            </div>
+
+            <div style="margin-top:20px">
+                <button class="btn-primario" onclick="adicionarTarefa()">
+                    <!-- Ícone - desenhado direto no html com coordenadas -->
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                        stroke-linecap="round">
+                        <line x1="12" y1="5" x2="12" y2="19" />
+                        <line x1="5" y1="12" x2="19" y2="12" />
+                    </svg>
+                    Adicionar Tarefa
+                </button>
+            </div>
+        </div>
+
+        <!-- ===== FILTROS ===== -->
+        <div class="formulario" style="padding: 20px 28px;">
+            <div class="filtros-cabecalho">
+                <!-- Ícone - desenhado direto no html com coordenadas criado utilizando i.a -->
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
+                </svg>
+                <span>Filtrar Tarefas</span>
+            </div>
+            <div class="filtros-btns">
+                <button class="filtro-btn ativo" id="fbtn-todas" onclick="filtrar('todas',this)">
+                    Todas <span class="count" id="cnt-todas">0</span>
+                </button>
+                <button class="filtro-btn" id="fbtn-pendentes" onclick="filtrar('pendentes',this)">
+                    Pendentes <span class="count" id="cnt-pendentes">0</span>
+                </button>
+                <button class="filtro-btn" id="fbtn-concluidas" onclick="filtrar('concluidas',this)">
+                    Concluídas <span class="count" id="cnt-concluidas">0</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- ===== LISTA DE TAREFAS ===== -->
+        <div id="lista-tarefas"></div>
+
+        <!-- Mensagem lista vazia -->
+        <div class="vazio" id="msg-vazio">
+            <div class="vazio-icon">
+                <!-- Ícone - desenhado direto no html com coordenadas criado utilizando i.a -->
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <rect x="3" y="5" width="14" height="3" rx="1.5" />
+                    <rect x="3" y="11" width="14" height="3" rx="1.5" />
+                    <path d="M3 17h8" />
+                    <circle cx="18" cy="18" r="3" />
+                    <path d="m16.5 18 1 1 2-2" />
+                </svg>
+            </div>
+            <h3>Nenhuma tarefa encontrada</h3>
+            <p>Adicione uma nova tarefa para começar a organizar suas atividades</p>
+        </div>
+
+    </div><!-- /container -->
+
+
+    <!-- ===== MODAL DE EDIÇÃO ===== -->
+  <div class="overlay" id="overlay" onclick="fecharModalFora(event)">
+    <div class="modal">
+      <div class="modal-header">
+        <span class="modal-titulo-text" id="modal-titulo">Editar Tarefa</span>
+        <button class="btn-fechar" onclick="fecharModal()">✕</button>
+      </div>
+
+      <div class="campo">
+        <label>Título <span class="req">*</span></label>
+        <input type="text" id="modal-titulo-campo" placeholder="Digite o título da tarefa">
+        <div class="erro-msg" id="modal-erro-titulo">Por favor, preencha o título.</div>
+      </div>
+
+      <div class="campo">
+        <label>Descrição</label>
+        <textarea id="modal-desc" placeholder="Digite uma descrição (opcional)"></textarea>
+      </div>
+
+      <div class="campos-duplos">
+        <div class="campo" style="margin-bottom:0">
+          <label>Data de Entrega</label>
+          <input type="date" id="modal-data">
+        </div>
+        <div class="campo" style="margin-bottom:0">
+          <label>Prioridade</label>
+          <select id="modal-prioridade">
+            <option value="baixa">Baixa</option>
+            <option value="media" selected>Média</option>
+            <option value="alta">Alta</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="modal-acoes">
+        <button class="btn-cancelar" onclick="fecharModal()">Cancelar</button>
+        <button class="btn-primary"  onclick="salvarEdicao()">Salvar alterações</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== mensagens saltitantes ===== -->
+  <div id="mensagens-saltitantes"></div>
+</body>
+
+</html>
