@@ -6,7 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="Media/Favcons/terminal-de-codigo-favcon.png" type="image/x-icon">
     <link rel="stylesheet" href="estilos.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Michroma&display=swap" rel="stylesheet">
     <script src="codigo.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <title>Lista de tarefas</title>
 </head>
 
@@ -25,7 +29,7 @@
             </div>
             <h1>Gerenciador de Tarefas</h1>
         </div>
-        <p>Organize suas atividades e aumente sua produtividade</p>
+
     </div>
 
 
@@ -34,16 +38,16 @@
         <!-- ===== BARRA DE FERRAMENTAS ===== -->
         <div class="barra_ferramentas">
             <button class="btn-ferram" id="btn-notif" onclick="ativarNotificacoes()">
-                🔔 <span>Notificações</span>
+                <span>Ative as notificações</span>
             </button>
             <button class="btn-ferram" onclick="exportarPDF()">
-                📄 <span>Exportar em PDF</span>
+                <span>Exportar em PDF</span>
             </button>
         </div>
 
         <!-- ===== FORMULÁRIO - NOVA TAREFA ===== -->
         <div class="formulario">
-            <div class="form-titulo">Nova Tarefa</div>
+            <div class="form-titulo">Insira uma Nova Tarefa</div>
 
             <div class="campo">
                 <label>Título <span class="req">*</span></label>
@@ -71,7 +75,7 @@
                 </div>
             </div>
 
-            <div style="margin-top:20px">
+            <div class="cent-botao">
                 <button class="btn-primario" onclick="adicionarTarefa()">
                     <!-- Ícone - desenhado direto no html com coordenadas -->
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
@@ -131,48 +135,50 @@
 
 
     <!-- ===== MODAL DE EDIÇÃO ===== -->
-  <div class="overlay" id="overlay" onclick="fecharModalFora(event)">
-    <div class="modal">
-      <div class="modal-header">
-        <span class="modal-titulo-text" id="modal-titulo">Editar Tarefa</span>
-        <button class="btn-fechar" onclick="fecharModal()">✕</button>
-      </div>
+    <div class="overlay" id="overlay" onclick="fecharModalFora(event)">
+        <div class="modal">
+            <div class="modal-header">
+                <span class="modal-titulo-text" id="modal-titulo">Editar Tarefa</span>
+                <button class="btn-fechar" onclick="fecharModal()">✕</button>
+            </div>
 
-      <div class="campo">
-        <label>Título <span class="req">*</span></label>
-        <input type="text" id="modal-titulo-campo" placeholder="Digite o título da tarefa">
-        <div class="erro-msg" id="modal-erro-titulo">Por favor, preencha o título.</div>
-      </div>
+            <div class="campo">
+                <label>Título <span class="req">*</span></label>
+                <input type="text" id="modal-titulo-campo" placeholder="Digite o título da tarefa">
+                <div class="erro-msg" id="modal-erro-titulo">Por favor, preencha o título.</div>
+            </div>
 
-      <div class="campo">
-        <label>Descrição</label>
-        <textarea id="modal-desc" placeholder="Digite uma descrição (opcional)"></textarea>
-      </div>
+            <div class="campo">
+                <label>Descrição</label>
+                <textarea id="modal-desc" placeholder="Digite uma descrição (opcional)"></textarea>
+            </div>
 
-      <div class="campos-duplos">
-        <div class="campo" style="margin-bottom:0">
-          <label>Data de Entrega</label>
-          <input type="date" id="modal-data">
+            <div class="campos-duplos">
+                <div class="campo" style="margin-bottom:0">
+                    <label>Data de Entrega</label>
+                    <input type="date" id="modal-data">
+                </div>
+                <div class="campo" style="margin-bottom:0">
+                    <label>Prioridade</label>
+                    <select id="modal-prioridade">
+                        <option value="baixa">Baixa</option>
+                        <option value="media" selected>Média</option>
+                        <option value="alta">Alta</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="modal-acoes">
+                <button class="btn-cancelar" onclick="fecharModal()">Cancelar</button>
+                <button class="btn-primary" onclick="salvarEdicao()">Salvar alterações</button>
+            </div>
         </div>
-        <div class="campo" style="margin-bottom:0">
-          <label>Prioridade</label>
-          <select id="modal-prioridade">
-            <option value="baixa">Baixa</option>
-            <option value="media" selected>Média</option>
-            <option value="alta">Alta</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="modal-acoes">
-        <button class="btn-cancelar" onclick="fecharModal()">Cancelar</button>
-        <button class="btn-primary"  onclick="salvarEdicao()">Salvar alterações</button>
-      </div>
     </div>
-  </div>
 
-  <!-- ===== mensagens saltitantes ===== -->
-  <div id="mensagens-saltitantes"></div>
+    <!-- ===== mensagens saltitantes ===== -->
+    <div id="mensagens-saltitantes"></div>
+
+    <footer>&copy; 2026 - Ricardo Medeiros</footer>
 </body>
 
 </html>
